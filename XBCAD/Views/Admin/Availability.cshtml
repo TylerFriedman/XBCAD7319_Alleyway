@@ -4,7 +4,7 @@
 }
 
 <div class="container mt-4">
-    <h2>Default availability</h2>
+    <h2>Default Availability</h2>
 
     <form asp-action="SaveAvailability" method="post">
         <div class="availability-section">
@@ -44,56 +44,47 @@
     <!-- Block to display saved availability -->
     <div class="mt-5">
         <h4>Current Availability</h4>
-        @if (Model.Days.Any(day => day.TimeSlots.Any()))
-        {
-            <div class="saved-availability">
-                @foreach (var day in Model.Days)
-                {
-                    <div class="saved-day">
-                        <strong>@day.Day:</strong>
-                        @if (day.TimeSlots.Any())
-                        {
-                            <ul>
-                                @foreach (var slot in day.TimeSlots)
-                                {
-                                    <li>@slot.StartTime - @slot.EndTime</li>
-                                }
-                            </ul>
-                        }
-                        else
-                        {
-                            <p>No availability set for this day.</p>
-                        }
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <p>No availability saved yet.</p>
-        }
+        <div class="saved-availability">
+            @foreach (var day in Model.Days)
+            {
+                <div class="saved-day">
+                    <strong>@day.Day:</strong>
+                    @if (day.TimeSlots != null && day.TimeSlots.Any())
+                    {
+                        <ul>
+                            @foreach (var slot in day.TimeSlots)
+                            {
+                                <li>@slot.StartTime - @slot.EndTime</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No availability set for this day.</p>
+                    }
+                </div>
+            }
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        // Initialize Flatpickr on time inputs
         function initializeTimePickers() {
             $(".timepicker").flatpickr({
                 enableTime: true,
                 noCalendar: true,
-                dateFormat: "H:i",  // Use 24-hour format
+                dateFormat: "H:i",
                 time_24hr: true
             });
         }
 
-        initializeTimePickers(); // Initialize on page load
+        initializeTimePickers();
 
         function addTimeSlot(button, dayIndex) {
             var container = $(button).closest('.time-slots');
             var timeSlotCount = container.children('.time-slot').length;
 
-            // Create a new time slot dynamically
             var newSlot = $('<div class="time-slot d-flex align-items-center">' +
                 '<input type="text" name="Days[' + dayIndex + '].TimeSlots[' + timeSlotCount + '].StartTime" class="form-control me-2 timepicker" placeholder="Start Time">' +
                 '<span class="me-2">until</span>' +
@@ -101,10 +92,7 @@
                 '<button type="button" class="btn btn-danger me-2" onclick="removeTimeSlot(this)">&#x1F5D1;</button>' +
                 '</div>');
 
-            // Append the new time slot to the container
             container.append(newSlot);
-
-            // Re-initialize Flatpickr for the newly added inputs
             initializeTimePickers();
         }
 
