@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using XBCAD.ViewModels;
 
 namespace XBCAD.Controllers
 {
@@ -14,6 +15,11 @@ namespace XBCAD.Controllers
         {
             ViewData["Title"] = "Manage Users";
             return View();
+        }
+        public IActionResult Availability()
+        {
+            var model = new AvailabilityViewModel();
+            return View(model);
         }
     }
 }

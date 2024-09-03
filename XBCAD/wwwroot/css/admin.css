@@ -75,3 +75,65 @@
     background-color: #f8f9fa;
     padding: 20px;
 }
+
+.container {
+    margin-top: 20px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.section-header {
+    margin-bottom: 10px;
+}
+
+.section-title {
+    color: #FF7900;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.availability-table {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.day-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.day-name {
+    width: 100px;
+    font-weight: bold;
+}
+
+.time-slots {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.time-slot {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+    .time-slot input {
+        margin-right: 5px;
+    }
+
+.btn-primary {
+    background-color: #FF7900;
+    border-color: #FF7900;
+}
+
+.btn-danger {
+    color: white;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+

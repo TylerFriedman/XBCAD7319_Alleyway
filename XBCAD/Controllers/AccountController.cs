@@ -35,6 +35,11 @@ namespace XBCAD.Controllers
         {
             return View();
         }
+         public IActionResult Dashboard()
+        {
+            return View();
+        }
+
 
         [HttpPost]
         public IActionResult Register(RegisterViewModel model)

@@ -15,5 +15,6 @@ namespace XBCAD.Controllers
             ViewData["Title"] = "Profile";
             return View();
         }
+       
     }
 }

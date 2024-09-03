@@ -1,0 +1,51 @@
+﻿@model XBCAD.ViewModels.AvailabilityViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Set default availability for client self-booking</h2>
+
+    <div class="availability-section">
+        <div class="section-header">
+            <h3 class="section-title">General Availability</h3>
+        </div>
+        <div class="availability-table">
+            @foreach (var day in Model.Days)
+            {
+                <div class="day-row">
+                    <div class="day-name">@day.Day</div>
+                    <div class="time-slots">
+                        @for (int i = 0; i < day.TimeSlots.Count; i++)
+                        {
+                            <div class="time-slot">
+                                <input type="text" name="Days[@Model.Days.IndexOf(day)].TimeSlots[@i].StartTime" class="form-control" value="@day.TimeSlots[i].StartTime" placeholder="Start Time">
+                                <span>until</span>
+                                <input type="text" name="Days[@Model.Days.IndexOf(day)].TimeSlots[@i].EndTime" class="form-control" value="@day.TimeSlots[i].EndTime" placeholder="End Time">
+                                <button type="button" class="btn btn-danger" onclick="removeTimeSlot(this)">&#x1F5D1;</button>
+                            </div>
+                        }
+
+                        <button type="button" class="btn btn-primary" onclick="addTimeSlot(this)">&#x2795; Add Time</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function addTimeSlot(button) {
+            var container = $(button).closest('.time-slots');
+            var newSlot = container.find('.time-slot').first().clone();
+            newSlot.find('input').val('');
+            container.append(newSlot);
+        }
+
+        function removeTimeSlot(button) {
+            var slot = $(button).closest('.time-slot');
+            slot.remove();
+        }
+    </script>
+}
