@@ -177,3 +177,25 @@
     background-color: #dc3545;
     border-color: #dc3545;
 }
+
+/* Custom styles for saved availability blocks */
+.custom-header {
+    background-color: #27262C; /* Orange header for saved availability */
+    color: white;
+}
+
+.custom-body {
+    background-color: #f8f9fa; /* Light gray body for saved availability */
+}
+
+.custom-list-item {
+    background-color: #d4edda; /* Light green background for list items */
+    transition: none; /* Remove hover transitions */
+    box-shadow: none; /* Remove box-shadow */
+}
+
+    .custom-list-item:hover {
+        color: inherit; /* Maintain the original text color */
+        background-color: #d4edda; /* Keep the same background color */
+        box-shadow: none; /* Prevent any glow or shadow */
+    }
