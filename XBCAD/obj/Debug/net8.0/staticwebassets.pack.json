@@ -9,6 +9,14 @@
       "PackagePath": "staticwebassets\\css\\Login.css"
     },
     {
+      "Id": "C:\\Users\\lab_services_student\\source\\repos\\XBCAD\\XBCAD\\wwwroot\\css\\admin.css",
+      "PackagePath": "staticwebassets\\css\\admin.css"
+    },
+    {
+      "Id": "C:\\Users\\lab_services_student\\source\\repos\\XBCAD\\XBCAD\\wwwroot\\css\\client.css",
+      "PackagePath": "staticwebassets\\css\\client.css"
+    },
+    {
       "Id": "C:\\Users\\lab_services_student\\source\\repos\\XBCAD\\XBCAD\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
@@ -23,6 +31,10 @@
     {
       "Id": "C:\\Users\\lab_services_student\\source\\repos\\XBCAD\\XBCAD\\wwwroot\\images\\HalfCircle.jpeg",
       "PackagePath": "staticwebassets\\images\\HalfCircle.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\lab_services_student\\source\\repos\\XBCAD\\XBCAD\\wwwroot\\images\\NavPic.png",
+      "PackagePath": "staticwebassets\\images\\NavPic.png"
     },
     {
       "Id": "C:\\Users\\lab_services_student\\source\\repos\\XBCAD\\XBCAD\\wwwroot\\images\\Triangle.jpeg",

@@ -16,12 +16,20 @@ namespace XBCAD.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Handle login logic here
-                return RedirectToAction("Index", "Home");
+                // Example: Check user role
+                if (model.Username == "admin") // Replace with actual role checking logic
+                {
+                    // Redirect to Admin Dashboard
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+                else
+                {
+                    // Redirect to Client Dashboard
+                    return RedirectToAction("Dashboard", "Client");
+                }
             }
             return View(model);
         }
-
         // GET: Account/Register
         public IActionResult Register()
         {
@@ -38,5 +46,11 @@ namespace XBCAD.Controllers
             }
             return View(model);
         }
+        public IActionResult Logout()
+        {
+            // Log out logic
+            return RedirectToAction("Login");
+        }
     }
 }
+
