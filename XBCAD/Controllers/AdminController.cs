@@ -21,6 +21,7 @@ namespace XBCAD.Controllers
                 new DayAvailability { Day = "Sunday", TimeSlots = new List<TimeSlot>() }
             }
         };
+        //test
 
         public IActionResult Dashboard()
         {
