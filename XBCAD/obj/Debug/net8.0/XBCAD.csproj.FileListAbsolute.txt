@@ -28,3 +28,4 @@ C:\Users\lab_services_student\source\repos\XBCAD\XBCAD\obj\Debug\net8.0\refint\X
 C:\Users\lab_services_student\source\repos\XBCAD\XBCAD\obj\Debug\net8.0\XBCAD.pdb
 C:\Users\lab_services_student\source\repos\XBCAD\XBCAD\obj\Debug\net8.0\XBCAD.genruntimeconfig.cache
 C:\Users\lab_services_student\source\repos\XBCAD\XBCAD\obj\Debug\net8.0\ref\XBCAD.dll
+C:\Users\lab_services_student\source\repos\XBCAD\XBCAD\obj\Debug\net8.0\XBCAD.sourcelink.json
