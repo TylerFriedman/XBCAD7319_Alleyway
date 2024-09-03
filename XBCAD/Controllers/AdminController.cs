@@ -20,7 +20,6 @@ namespace XBCAD.Controllers
             return View();
         }
 
-        // Static instance to store the availability data
         private static AvailabilityViewModel savedAvailability = new AvailabilityViewModel
         {
             Days = new List<DayAvailability>
@@ -41,32 +40,33 @@ namespace XBCAD.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveAvailability(AvailabilityViewModel model)
+        public IActionResult SaveTimeSlot(string day, string startTime, string endTime)
         {
-            if (ModelState.IsValid)
+            var savedDay = savedAvailability.Days.FirstOrDefault(d => d.Day == day);
+            if (savedDay != null)
             {
-                // Update savedAvailability with the data from the model
-                foreach (var incomingDay in model.Days)
+                // Add the new time slot to the day's availability
+                savedDay.TimeSlots.Add(new TimeSlot { StartTime = startTime, EndTime = endTime });
+            }
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult RemoveTimeSlot(string day, string startTime, string endTime)
+        {
+            var savedDay = savedAvailability.Days.FirstOrDefault(d => d.Day == day);
+            if (savedDay != null)
+            {
+                // Find and remove the time slot from the day's availability
+                var slotToRemove = savedDay.TimeSlots.FirstOrDefault(ts => ts.StartTime == startTime && ts.EndTime == endTime);
+                if (slotToRemove != null)
                 {
-                    var savedDay = savedAvailability.Days.FirstOrDefault(d => d.Day == incomingDay.Day);
-                    if (savedDay != null)
-                    {
-                        // Ensure the TimeSlots are not null
-                        if (incomingDay.TimeSlots != null)
-                        {
-                            savedDay.TimeSlots = incomingDay.TimeSlots;
-                        }
-                    }
+                    savedDay.TimeSlots.Remove(slotToRemove);
                 }
             }
-            // Return the view with the updated savedAvailability to ensure data persistence
-            return View("Availability", savedAvailability);
+
+            return Json(new { success = true });
         }
     }
-
-
-
-
-
-
 }
