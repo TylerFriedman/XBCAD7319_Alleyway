@@ -3,6 +3,7 @@ using XBCAD.ViewModels;
 
 namespace XBCAD.Controllers
 {
+    //test
     public class AccountController : Controller
     {
         // GET: Account/Login
