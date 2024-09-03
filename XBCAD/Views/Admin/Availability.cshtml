@@ -16,17 +16,19 @@
                 <div class="day-row">
                     <div class="day-name">@day.Day</div>
                     <div class="time-slots">
-                        @for (int i = 0; i < day.TimeSlots.Count; i++)
+                        @if (day.TimeSlots != null && day.TimeSlots.Count > 0)
                         {
-                            <div class="time-slot">
-                                <input type="text" name="Days[@Model.Days.IndexOf(day)].TimeSlots[@i].StartTime" class="form-control" value="@day.TimeSlots[i].StartTime" placeholder="Start Time">
-                                <span>until</span>
-                                <input type="text" name="Days[@Model.Days.IndexOf(day)].TimeSlots[@i].EndTime" class="form-control" value="@day.TimeSlots[i].EndTime" placeholder="End Time">
-                                <button type="button" class="btn btn-danger" onclick="removeTimeSlot(this)">&#x1F5D1;</button>
-                            </div>
+                            @for (int i = 0; i < day.TimeSlots.Count; i++)
+                            {
+                                <div class="time-slot d-flex align-items-center">
+                                    <input type="text" name="Days[@Model.Days.IndexOf(day)].TimeSlots[@i].StartTime" class="form-control me-2" value="@day.TimeSlots[i].StartTime" placeholder="Start Time">
+                                    <span class="me-2">until</span>
+                                    <input type="text" name="Days[@Model.Days.IndexOf(day)].TimeSlots[@i].EndTime" class="form-control me-2" value="@day.TimeSlots[i].EndTime" placeholder="End Time">
+                                    <button type="button" class="btn btn-danger me-2" onclick="removeTimeSlot(this)">&#x1F5D1;</button>
+                                </div>
+                            }
                         }
-
-                        <button type="button" class="btn btn-primary" onclick="addTimeSlot(this)">&#x2795; Add Time</button>
+                        <button type="button" class="btn btn-primary mt-2" onclick="addTimeSlot(this)">&#x2795; Add Time</button>
                     </div>
                 </div>
             }
@@ -34,12 +36,21 @@
     </div>
 </div>
 
+
 @section Scripts {
     <script>
         function addTimeSlot(button) {
             var container = $(button).closest('.time-slots');
-            var newSlot = container.find('.time-slot').first().clone();
-            newSlot.find('input').val('');
+
+            // Create a new time slot dynamically
+            var newSlot = $('<div class="time-slot d-flex align-items-center">' +
+                '<input type="text" name="Days[' + container.parent().index() + '].TimeSlots[].StartTime" class="form-control me-2" placeholder="Start Time">' +
+                '<span class="me-2">until</span>' +
+                '<input type="text" name="Days[' + container.parent().index() + '].TimeSlots[].EndTime" class="form-control me-2" placeholder="End Time">' +
+                '<button type="button" class="btn btn-danger me-2" onclick="removeTimeSlot(this)">&#x1F5D1;</button>' +
+                '</div>');
+
+            // Append the new time slot to the container
             container.append(newSlot);
         }
 
@@ -49,3 +60,4 @@
         }
     </script>
 }
+
