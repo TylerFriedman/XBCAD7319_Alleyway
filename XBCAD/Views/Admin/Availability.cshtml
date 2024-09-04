@@ -97,7 +97,10 @@
                         data: { day: day, startTime: startTime, endTime: endTime },
                         success: function (response) {
                             if (response.success) {
-                                loadAvailability(); // Reload the table to reflect changes
+                                // After saving, disable the inputs
+                                startTimeInput.prop('disabled', true);
+                                endTimeInput.prop('disabled', true);
+                                saveButton.remove(); // Remove the save button after saving
                             } else {
                                 alert('Failed to save time slot: ' + response.message);
                             }
@@ -111,6 +114,8 @@
                 }
             });
         }
+
+
 
         // Handle removal of time slots
         function removeTimeSlot(button, day = null, startTime = null, endTime = null) {
