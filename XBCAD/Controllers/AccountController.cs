@@ -8,9 +8,8 @@ using System;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json; // For JSON serialization
-using Newtonsoft.Json.Linq;  // Ensure this is included
-
+using Newtonsoft.Json.Linq;
+using System.Text.Json; // For JSON parsing
 
 namespace XBCAD.Controllers
 {
@@ -33,19 +32,21 @@ namespace XBCAD.Controllers
             this.auth = FirebaseAuth.DefaultInstance;
         }
 
-        [HttpGet("register")]
+        [HttpGet("Register")]
         public IActionResult Register()
         {
             return View();
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    
+
                     var userRecord = await this.auth.CreateUserAsync(new UserRecordArgs
                     {
                         Email = model.Username,
@@ -55,7 +56,7 @@ namespace XBCAD.Controllers
                     });
 
                     // Prepare data to be saved in RTDB
-                    var data = new { role = "client" };
+                    var data = new { role = "admin" };
                     var json = JsonSerializer.Serialize(data);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -85,65 +86,61 @@ namespace XBCAD.Controllers
 
         public IActionResult Login()
         {
-            return View();
+            return View(new LoginViewModel());  // Ensure a model instance is passed, even if empty
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> VerifyToken(string token)
+        {
+            try
+            {
+                var decodedToken = await FirebaseAdmin.Auth.FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
+                var uid = decodedToken.Uid;
+                // Proceed with the user's UID to grant access or fetch user-specific data
+                return Ok("User verified with UID: " + uid);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Token verification failed: " + ex.Message);
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid) //i need to change this back and fix it
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    // Commenting out the Firebase verification and RTDB logic
-                    /*
-                    var decodedToken = await auth.VerifyIdTokenAsync(model.Token);
-                    var uid = decodedToken.Uid;
-
-                    // Fetch user role from Firebase RTDB
-                    var url = $"https://alleysway-310a8-default-rtdb.firebaseio.com/users/{uid}.json";
-                    var response = await httpClient.GetStringAsync(url);
-                    var data = JObject.Parse(response);
-                    var role = data["role"]?.ToString();
-                    
-                    // Redirect based on role
-                    if (role == "admin")
-                    {
-                        return RedirectToAction("AdminDashboard", "Dashboard");
-                    }
-                    else if (role == "client")
-                    {
-                        return RedirectToAction("ClientDashboard", "Dashboard");
-                    }
-                    else
-                    {
-                        throw new Exception("Role not found or unauthorized.");
-                    }
-                    */
-
-                    // Workaround based on the entered username
-                    if (model.Username.Equals("admin", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return RedirectToAction("Dashboard", "Admin");
-                    }
-                    else if (model.Username.Equals("client", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return RedirectToAction("Dashboard", "Client");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Invalid username or role not found.");
-                        return View(model);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", $"Login failed: {ex.Message}");
-                    return View(model);
-                }
+                // Perhaps add more user-friendly error messages or specific logging here
+                return View(model);
             }
-            return View(model);
+
+            try
+            {
+                // Verify the Firebase ID token
+                var decodedToken = await auth.VerifyIdTokenAsync(model.Token);
+                var uid = decodedToken.Uid;
+
+                // Fetch user role from Firebase RTDB
+                var url = $"https://alleysway-310a8-default-rtdb.firebaseio.com/users/{uid}.json";
+                var response = await httpClient.GetStringAsync(url);
+                var data = JObject.Parse(response);
+                var role = data["role"]?.ToString();
+
+                // Redirect based on role
+                return role switch
+                {
+                    "admin" => RedirectToAction("Dashboard", "Admin"),
+                    "client" => RedirectToAction("Dashboard", "Client"),
+                    _ => throw new Exception("Role not found or unauthorized.")
+                };
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Login failed: {ex.Message}");
+                return View(model);
+            }
         }
+
 
         public IActionResult Logout()
         {
