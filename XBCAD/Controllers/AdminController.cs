@@ -6,7 +6,7 @@ namespace XBCAD.Controllers
 {
     public class AdminController : Controller
     {
-       
+
 
         public IActionResult Dashboard()
         {
@@ -19,53 +19,32 @@ namespace XBCAD.Controllers
             ViewData["Title"] = "Manage Users";
             return View();
         }
+        private readonly FirebaseService firebaseService;
 
-        private static AvailabilityViewModel savedAvailability = new AvailabilityViewModel
-        {
-            Days = new List<DayAvailability>
-            {
-                new DayAvailability { Day = "Monday", TimeSlots = new List<TimeSlot>() },
-                new DayAvailability { Day = "Tuesday", TimeSlots = new List<TimeSlot>() },
-                new DayAvailability { Day = "Wednesday", TimeSlots = new List<TimeSlot>() },
-                new DayAvailability { Day = "Thursday", TimeSlots = new List<TimeSlot>() },
-                new DayAvailability { Day = "Friday", TimeSlots = new List<TimeSlot>() },
-                new DayAvailability { Day = "Saturday", TimeSlots = new List<TimeSlot>() },
-                new DayAvailability { Day = "Sunday", TimeSlots = new List<TimeSlot>() }
-            }
-        };
 
-        public IActionResult Availability()
+
+        public AdminController()
         {
-            return View(savedAvailability);
+            firebaseService = new FirebaseService();
+        }
+
+        public async Task<IActionResult> Availability()
+        {
+            var model = await firebaseService.GetAvailabilityAsync();
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult SaveTimeSlot(string day, string startTime, string endTime)
+        public async Task<IActionResult> SaveTimeSlot(string day, string startTime, string endTime)
         {
-            var savedDay = savedAvailability.Days.FirstOrDefault(d => d.Day == day);
-            if (savedDay != null)
-            {
-                // Add the new time slot to the day's availability
-                savedDay.TimeSlots.Add(new TimeSlot { StartTime = startTime, EndTime = endTime });
-            }
-
+            await firebaseService.SaveTimeSlotAsync(day, startTime, endTime);
             return Json(new { success = true });
         }
 
         [HttpPost]
-        public IActionResult RemoveTimeSlot(string day, string startTime, string endTime)
+        public async Task<IActionResult> RemoveTimeSlot(string day, string startTime, string endTime)
         {
-            var savedDay = savedAvailability.Days.FirstOrDefault(d => d.Day == day);
-            if (savedDay != null)
-            {
-                // Find and remove the time slot from the day's availability
-                var slotToRemove = savedDay.TimeSlots.FirstOrDefault(ts => ts.StartTime == startTime && ts.EndTime == endTime);
-                if (slotToRemove != null)
-                {
-                    savedDay.TimeSlots.Remove(slotToRemove);
-                }
-            }
-
+            await firebaseService.RemoveTimeSlotAsync(day, startTime, endTime);
             return Json(new { success = true });
         }
     }
