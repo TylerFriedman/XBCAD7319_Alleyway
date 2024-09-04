@@ -17,37 +17,48 @@ public class FirebaseService
 
     public async Task<AvailabilityViewModel> GetAvailabilityAsync()
     {
-        var daysSnapshot = await firebase
-            .Child("Days")
-            .OnceAsync<DayAvailability>();
-
-        // Check if the snapshot is empty and create default days if necessary
-        if (daysSnapshot == null || !daysSnapshot.Any())
+        // Initialize the model with default days (Monday to Sunday)
+        var model = new AvailabilityViewModel
         {
-            return new AvailabilityViewModel
+            Days = new List<DayAvailability>
+        {
+            new DayAvailability { Day = "Monday", TimeSlots = new List<TimeSlot>() },
+            new DayAvailability { Day = "Tuesday", TimeSlots = new List<TimeSlot>() },
+            new DayAvailability { Day = "Wednesday", TimeSlots = new List<TimeSlot>() },
+            new DayAvailability { Day = "Thursday", TimeSlots = new List<TimeSlot>() },
+            new DayAvailability { Day = "Friday", TimeSlots = new List<TimeSlot>() },
+            new DayAvailability { Day = "Saturday", TimeSlots = new List<TimeSlot>() },
+            new DayAvailability { Day = "Sunday", TimeSlots = new List<TimeSlot>() }
+        }
+        };
+
+        try
+        {
+            // Fetch data from Firebase and store it in a nested dictionary
+            var daysSnapshot = await firebase
+                .Child("Days")
+                .OnceAsync<Dictionary<string, Dictionary<string, TimeSlot>>>();
+
+            // If there is data, update the corresponding days in the model
+            foreach (var dayEntry in daysSnapshot)
             {
-                Days = new List<DayAvailability>
+                var dayAvailability = model.Days.FirstOrDefault(d => d.Day == dayEntry.Key);
+                if (dayAvailability != null)
                 {
-                    new DayAvailability { Day = "Monday", TimeSlots = new List<TimeSlot>() },
-                    new DayAvailability { Day = "Tuesday", TimeSlots = new List<TimeSlot>() },
-                    new DayAvailability { Day = "Wednesday", TimeSlots = new List<TimeSlot>() },
-                    new DayAvailability { Day = "Thursday", TimeSlots = new List<TimeSlot>() },
-                    new DayAvailability { Day = "Friday", TimeSlots = new List<TimeSlot>() },
-                    new DayAvailability { Day = "Saturday", TimeSlots = new List<TimeSlot>() },
-                    new DayAvailability { Day = "Sunday", TimeSlots = new List<TimeSlot>() }
+                    // Flatten the nested dictionary into a list of TimeSlot objects
+                    dayAvailability.TimeSlots = dayEntry.Object.Values.SelectMany(dict => dict.Values).ToList();
                 }
-            };
+            }
+        }
+        catch
+        {
+            // In case of any exception (e.g., Firebase data fetch fails), just return the default days with no time slots
         }
 
-        return new AvailabilityViewModel
-        {
-            Days = daysSnapshot.Select(d => new DayAvailability
-            {
-                Day = d.Key,
-                TimeSlots = d.Object.TimeSlots
-            }).ToList()
-        };
+        return model;
     }
+
+
 
     public async Task SaveTimeSlotAsync(string day, string startTime, string endTime)
     {
