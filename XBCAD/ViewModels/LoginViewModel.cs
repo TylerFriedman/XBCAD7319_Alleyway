@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace XBCAD.ViewModels
 {
@@ -11,6 +12,7 @@ namespace XBCAD.ViewModels
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public string Token { get; set; } // If using Firebase token authentication
+        [Required]
+        public string Token { get; set; }
     }
 }
