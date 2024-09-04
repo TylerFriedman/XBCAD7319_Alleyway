@@ -112,7 +112,15 @@
             });
         }
 
-        function removeTimeSlot(button, day, startTime, endTime) {
+        // Handle removal of time slots
+        function removeTimeSlot(button, day = null, startTime = null, endTime = null) {
+            // Check if the time slot is unsaved (i.e., no start and end times) and remove directly from the DOM
+            if (!startTime && !endTime) {
+                $(button).closest('.time-slot').remove();
+                return;
+            }
+
+            // Otherwise, handle removing from the database
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("RemoveTimeSlot", "Admin")',

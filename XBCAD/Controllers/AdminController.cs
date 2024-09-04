@@ -6,8 +6,6 @@ namespace XBCAD.Controllers
 {
     public class AdminController : Controller
     {
-
-
         public IActionResult Dashboard()
         {
             ViewData["Title"] = "Admin Dashboard";
@@ -19,6 +17,7 @@ namespace XBCAD.Controllers
             ViewData["Title"] = "Manage Users";
             return View();
         }
+
         private readonly FirebaseService firebaseService;
 
         public AdminController()
@@ -45,7 +44,6 @@ namespace XBCAD.Controllers
             await firebaseService.SaveTimeSlotAsync(day, startTime, endTime);
             return Json(new { success = true });
         }
-
 
         [HttpPost]
         public async Task<IActionResult> RemoveTimeSlot(string day, string startTime, string endTime)
